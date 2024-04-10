@@ -1,0 +1,17 @@
+{
+    "name": "feiyufri/to_mail",
+    "require": {
+        "phpmailer/phpmailer": "^6.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "Feiyufri\\ToMail\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "xulu",
+            "email": "1459547510@qq.com"
+        }
+    ]
+}

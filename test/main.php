@@ -4,6 +4,7 @@ use Feiyufri\ToMail\template\EatTemplate;
 use Feiyufri\ToMail\template\TextTemplate;
 use Feiyufri\ToMail\ToMail;
 use Feiyufri\ToMail\tomail\Address;
+use Feiyufri\ToMail\tomail\Attachment;
 
 require_once "../vendor/autoload.php";
 
@@ -25,8 +26,19 @@ $config = [
 
 $toMail = new ToMail($config);
 $te = new TextTemplate(['username'=>'feiyu']);
-$to = new Address('***@qq.com', 'feiyu');
-$res = $toMail->setTemplate($te)->setToAddress($to)->send('xu');
+$to1 = new Address('***@qq.com', '**');
+$to2 = new Address('***@qq.com', '**');
+$at = new Attachment('./def.jpg','avatar.png');
+// 设置模板
+$toMail->setTemplate($te);
+// 设置纯文本内容
+// $toMail->setContent('标题','内容');
+// 设置发送地址
+$toMail->setToAddress($to1);
+$toMail->setToAddress($to2);
+// 设置发送附件
+$toMail->setAttachment($at);
+$res = $toMail->send();
 if ($res) {
     echo  '发送成功';
 } else {

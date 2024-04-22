@@ -103,10 +103,11 @@ class ToMail
 
     /**
      * 发送邮件
+     * @param array||callable $sucLogBackFun 错误回调函数
      * @param array||callable $errLogBackFun 错误回调函数
      * @return bool
      */
-    public function send($errLogBackFun = null): bool
+    public function send($sucLogBackFun = null, $errLogBackFun = null): bool
     {
         try {
             $this->mail->setFrom($this->fromMail, $this->fromName);
@@ -116,6 +117,9 @@ class ToMail
             $this->mail->addReplyTo($this->fromMail, $this->fromName);  // 回复邮箱
 
             $this->mail->send();
+            if ($sucLogBackFun) {
+                @call_user_func($errLogBackFun);
+            }
         } catch (\Exception $th) {
             $this->ErrorInfo = $th->getMessage();
             if ($errLogBackFun) {

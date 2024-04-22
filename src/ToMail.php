@@ -59,6 +59,10 @@ class ToMail
 
     /**
      * 设置内容
+     * @param string $title 邮件标题
+     * @param string $body  邮件内容
+     * @param string $altBody  邮件替代体
+     * @return ToMail
      */
     public function setContent(string $title, string $body, string $altBody = '暂不支持显示此内容'): ToMail
     {
@@ -70,6 +74,8 @@ class ToMail
 
     /**
      * 设置收件人
+     * @param Address $address 收件人object
+     * @return ToMail
      */
     public function setToAddress(Address $address): ToMail
     {
@@ -81,8 +87,10 @@ class ToMail
 
     /**
      * 设置附件
+     * @param Attachment $attachment 附件object
+     * @return ToMail
      */
-    public function setAttachment(Attachment $attachment)
+    public function setAttachment(Attachment $attachment): ToMail
     {
         if ($attachment->rename) {
             $this->mail->addAttachment($attachment->path, $attachment->rename);
@@ -95,8 +103,10 @@ class ToMail
 
     /**
      * 发送邮件
+     * @param array||callable $errLogBackFun 错误回调函数
+     * @return bool
      */
-    public function send(): bool
+    public function send($errLogBackFun = null): bool
     {
         try {
             $this->mail->setFrom($this->fromMail, $this->fromName);
@@ -106,10 +116,12 @@ class ToMail
             $this->mail->addReplyTo($this->fromMail, $this->fromName);  // 回复邮箱
 
             $this->mail->send();
-        } catch (PHPMailerException $th) {
-            return false;
         } catch (\Exception $th) {
             $this->ErrorInfo = $th->getMessage();
+            if ($errLogBackFun) {
+                // array || callable     拒绝报错  这只是一个报错时的回调函数
+                @call_user_func($errLogBackFun);
+            }
             return false;
         }
         return true;
